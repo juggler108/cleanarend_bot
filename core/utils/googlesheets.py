@@ -21,19 +21,19 @@ def create_new_sheet(name):
 
 def show_free_dates(product):
     """Return 7 free dates"""
-    today = datetime.date.today().strftime("%d/%m/%Y")
+    today = datetime.date.today()
     wks = authorize_client().worksheet_by_title(product)
     cells = wks.get_all_values(returnas='matrix')
     free_dates_lst = []
     for val in cells:
-        try:
-            int(val[0].split('/')[2])
-            if val[0] >= today and (val[1] == '' or val[2] == '' or val[3] == ''):
+        if "2023" in val[0]:
+            day = int(val[0].split("/")[0])
+            month = int(val[0].split("/")[1])
+            year = int(val[0].split("/")[2])
+            if today <= datetime.date(day=day, month=month, year=year) and (val[1] == '' or val[2] == '' or val[3] == ''):
                 free_dates_lst.append(val[0])
                 if len(free_dates_lst) == 7:
                     return '\n'.join(free_dates_lst)
-        except:
-            continue
 
 
 def get_is_free_date(product, date):
